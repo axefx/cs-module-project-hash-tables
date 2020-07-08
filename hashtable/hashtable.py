@@ -49,7 +49,7 @@ class HashTable:
         """
         # tip: https://brilliant.org/wiki/hash-tables/
         # the number of items in table divided by size of table
-        # gives idea of how packed it is not balance
+        # gives idea of how packed it is, not balance
         return self.count / self.capacity
 
 
@@ -116,8 +116,6 @@ class HashTable:
                 current = current.next
             cur.insert(entry)
             self.count += 1
-        # todo: resize at load factor above .7
-        # double the capacity
 
 
     def delete(self, key):
@@ -158,15 +156,22 @@ class HashTable:
 
         Implement this.
         """
-        # save old data_storage
-        # old_data-storage = self.data_storage
-        # set data_storage = [None] * new_capacity
-        # self.data_storage = [LinkedList()] * new_capacity
-        # traverse old data_storage
-        # for node in old_data-storage:
-            # cur = node.value.head
-        # put into new data_storage with new_capacity
-        # update capacity to new_capacity
+        if self.get_load_factor() > .7:
+            # save old data_storage
+            old_datastorage = self.data_storage
+            # set data_storage = [None] * new_capacity
+            self.data_storage = [LinkedList()] * new_capacity
+            # update capacity to new_capacity
+            self.capacity = new_capacity
+            # traverse old data_storage nodes
+            for l_lists in old_datastorage:
+                # traverse linked list nodes
+                if l_lists.head:
+                    cur = l_lists.head
+                    while cur:
+                        # put into new data_storage with new_capacity
+                        self.put(cur.value.key, cur.value.value)
+                        cur = cur.next
 
 
 
@@ -191,7 +196,7 @@ if __name__ == "__main__":
 
     # Test storing beyond capacity
     for i in range(1, 13):
-        print(ht.get(f"line_{i}"))
+        print("line",i,":", ht.get(f"line_{i}"))
 
     # Test resizing
     old_capacity = ht.get_num_slots()
@@ -205,8 +210,4 @@ if __name__ == "__main__":
         print(ht.get(f"line_{i}"))
 
     print("")
-    print(ord('a'))
-    print(((5381 << 5)+ 5381)+ ord('a'))
-    print(5381 << 5)
-    print(5381 * 33)
-    print(5381 * 33 - 5381)
+    print(len(ht.data_storage))

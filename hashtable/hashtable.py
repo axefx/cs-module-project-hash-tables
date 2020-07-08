@@ -1,3 +1,5 @@
+from linkedlist import LinkedList
+
 class HashTableEntry:
     """
     Linked List hash table key/value pair
@@ -21,8 +23,9 @@ class HashTable:
     """
 
     def __init__(self, capacity = MIN_CAPACITY):
-        self.data_storage = [None] * capacity
+        self.data_storage = [LinkedList()] * capacity
         self.capacity = capacity
+        self.count = 0
 
 
     def get_num_slots(self):
@@ -35,7 +38,7 @@ class HashTable:
 
         Implement this.
         """
-        # Your code here
+        return self.capacity
 
 
     def get_load_factor(self):
@@ -45,7 +48,9 @@ class HashTable:
         Implement this.
         """
         # tip: https://brilliant.org/wiki/hash-tables/
-        # Your code here
+        # the number of items in table divided by size of table
+        # gives idea of how packed it is not balance
+        return self.count / self.capacity
 
 
     def fnv1(self, key):
@@ -92,9 +97,27 @@ class HashTable:
 
         Implement this.
         """
+        # get hash index
         i = self.hash_index(key)
+        # create entry with key and value
         entry = HashTableEntry(key, value)
-        self.data_storage[i] = entry
+        # get ll using index
+        cur = self.data_storage[i]
+        # handle empty
+        if cur.head is None:
+            cur.insert(entry)            
+            self.count += 1
+        # else head is not None
+        else:
+            current = cur.head
+            while current:
+                if current.value.key == key:
+                    current.value.value = value
+                current = current.next
+            cur.insert(entry)
+            self.count += 1
+        # todo: resize at load factor above .7
+        # double the capacity
 
 
     def delete(self, key):
@@ -106,6 +129,9 @@ class HashTable:
         Implement this.
         """
         self.put(key, None)
+        self.count -= 1
+        # todo: resize down by half at load factor below .2
+        # up to a minimum 
 
 
     def get(self, key):
@@ -117,10 +143,11 @@ class HashTable:
         Implement this.
         """
         i = self.hash_index(key)
-        entry = self.data_storage[i]
-
-        if entry:
-            return entry.value
+        cur = self.data_storage[i].head
+        while cur:
+            if cur.value.key == key:
+                return cur.value.value
+            cur = cur.next
         return None
 
 
@@ -131,7 +158,16 @@ class HashTable:
 
         Implement this.
         """
-        pass
+        # save old data_storage
+        # old_data-storage = self.data_storage
+        # set data_storage = [None] * new_capacity
+        # self.data_storage = [LinkedList()] * new_capacity
+        # traverse old data_storage
+        # for node in old_data-storage:
+            # cur = node.value.head
+        # put into new data_storage with new_capacity
+        # update capacity to new_capacity
+
 
 
 

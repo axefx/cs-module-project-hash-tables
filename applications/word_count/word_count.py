@@ -1,5 +1,20 @@
+import re
+
 def word_count(s):
-    # Your code here
+    d = dict()
+    s = s.lower().split()
+    tokens = []
+    for word in s:
+        word = word.replace('"',"").replace(",", "").replace(".","")
+        word = re.sub("[\W]+[\'\W]",'',word)
+        if word:
+            tokens.append(word)
+    for token in tokens:
+        if token not in d:
+            d[token] = 1
+        else: 
+            d[token] += 1
+    return d
 
 
 

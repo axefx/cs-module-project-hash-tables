@@ -10,12 +10,12 @@ def slowfun_too_slow(x, y):
 
     return v
 
+cache = {}
 def slowfun(x, y):
     """
     Rewrite slowfun_too_slow() in here so that the program produces the same
     output, but completes quickly instead of taking ages to run.
     """
-    cache = {}
     def fast_inner(x,y):
         '''
         i = hash((x,y))
